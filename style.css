@@ -1,0 +1,834 @@
+/* ==========================================================================
+   CarbonSense — Global Design System
+   Phase 1: Design Tokens, Reset, Layout, Accessibility
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Design Tokens (CSS Custom Properties)
+   -------------------------------------------------------------------------- */
+:root {
+  /* Colour palette */
+  --color-bg:              #0D2B1F;
+  --color-surface:         #132E22;
+  --color-surface-2:       #1C3D2E;
+  --color-accent:          #E8A427;
+  --color-accent-soft:     #F5C96A;
+  --color-text-primary:    #F0EBE1;
+  --color-text-secondary:  #A8BFB0;
+  --color-danger:          #E05C4B;
+  --color-success:         #4CAF7D;
+
+  /* Typography */
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body:    'DM Sans', system-ui, -apple-system, sans-serif;
+
+  /* Border radii */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+
+  /* Elevation */
+  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.35);
+  --shadow-hover: 0 8px 32px rgba(0, 0, 0, 0.45);
+
+  /* Motion */
+  --transition: 0.2s ease;
+
+  /* Layout */
+  --header-height:   68px;
+  --footer-height:   72px;
+  --panel-gap:       1.25rem;
+  --panel-padding:   1.5rem;
+  --chat-col-width:  420px;
+}
+
+/* --------------------------------------------------------------------------
+   2. Global Reset
+   -------------------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  /* Smooth anchor scrolling */
+  scroll-behavior: smooth;
+  /* Prevent horizontal overflow */
+  overflow-x: hidden;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.6;
+  min-height: 100vh;
+  /* Organic leaf-vein texture (data-URI SVG, very low opacity) */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' opacity='0.035'%3E%3Cg stroke='%234CAF7D' stroke-width='1' fill='none'%3E%3Cpath d='M200 0 Q220 80 200 160 Q180 240 200 400'/%3E%3Cpath d='M200 80 Q260 100 300 140'/%3E%3Cpath d='M200 80 Q140 100 100 140'/%3E%3Cpath d='M200 160 Q270 170 320 210'/%3E%3Cpath d='M200 160 Q130 170 80 210'/%3E%3Cpath d='M200 240 Q255 248 290 280'/%3E%3Cpath d='M200 240 Q145 248 110 280'/%3E%3Cpath d='M200 320 Q235 326 258 350'/%3E%3Cpath d='M200 320 Q165 326 142 350'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 400px 400px;
+  background-repeat: repeat;
+  display: flex;
+  flex-direction: column;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* --------------------------------------------------------------------------
+   3. Skip Navigation (Accessibility)
+   -------------------------------------------------------------------------- */
+.skip-nav {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  z-index: 9999;
+  padding: 0.6rem 1.2rem;
+  background: var(--color-accent);
+  color: #0D2B1F;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.9rem;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  transition: top var(--transition);
+}
+
+.skip-nav:focus {
+  top: 1rem;
+  outline: 2px solid #0D2B1F;
+  outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   4. Global Focus Styles (WCAG 2.1 AA)
+   -------------------------------------------------------------------------- */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Remove default focus ring only when :focus-visible is supported */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* --------------------------------------------------------------------------
+   5. Site Header
+   -------------------------------------------------------------------------- */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: var(--header-height);
+  background: rgba(13, 43, 31, 0.92);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.header-inner {
+  max-width: 1440px;
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+/* Logo lockup */
+.header-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+  cursor: default;
+}
+
+.logo-icon {
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 6px rgba(76, 175, 125, 0.4));
+}
+
+.logo-wordmark {
+  font-family: var(--font-display);
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: var(--color-accent);
+  letter-spacing: -0.02em;
+  /* Subtle text shadow for depth */
+  text-shadow: 0 2px 8px rgba(232, 164, 39, 0.3);
+}
+
+.header-tagline {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  font-style: italic;
+  letter-spacing: 0.02em;
+  /* Hide on very small screens */
+}
+
+/* --------------------------------------------------------------------------
+   6. Main Application Layout (Two-Panel Grid)
+   -------------------------------------------------------------------------- */
+.app-main {
+  flex: 1;
+  display: grid;
+  grid-template-columns: var(--chat-col-width) 1fr;
+  grid-template-rows: 1fr;
+  gap: var(--panel-gap);
+  padding: var(--panel-gap);
+  max-width: 1440px;
+  width: 100%;
+  margin: 0 auto;
+  /* Ensure panels fill viewport between header and footer */
+  min-height: calc(100vh - var(--header-height) - var(--footer-height));
+  align-items: stretch;
+}
+
+/* --------------------------------------------------------------------------
+   7. Application Panels (Chat + Dashboard)
+   -------------------------------------------------------------------------- */
+.app-panel {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: var(--panel-padding);
+  box-shadow: var(--shadow-card);
+  /* Subtle inner border for glass-like depth */
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  /* Allow independent scrolling */
+  overflow-y: auto;
+  /* Smooth height transitions */
+  transition: box-shadow var(--transition);
+  /* Establish stacking context */
+  position: relative;
+}
+
+.app-panel:hover {
+  box-shadow: var(--shadow-hover);
+}
+
+/* --------------------------------------------------------------------------
+   8. Site Footer
+   -------------------------------------------------------------------------- */
+.site-footer {
+  height: var(--footer-height);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(13, 43, 31, 0.6);
+  display: flex;
+  align-items: center;
+}
+
+.footer-inner {
+  max-width: 1440px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.footer-credit {
+  font-size: 0.78rem;
+  color: var(--color-text-secondary);
+}
+
+.footer-accent {
+  color: var(--color-accent-soft);
+  font-weight: 500;
+}
+
+.footer-note {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  opacity: 0.7;
+}
+
+.footer-note code {
+  font-family: 'Courier New', monospace;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 0.1em 0.4em;
+  border-radius: 3px;
+  font-size: 0.85em;
+}
+
+/* --------------------------------------------------------------------------
+   9. Typography Utilities
+   -------------------------------------------------------------------------- */
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  line-height: 1.2;
+  color: var(--color-text-primary);
+}
+
+/* Visually hidden utility (for screen-reader-only content) */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* --------------------------------------------------------------------------
+   10. Responsive Layout — Mobile (max-width: 768px)
+   -------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+  .app-main {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    /* Reclaim vertical space on mobile */
+    min-height: unset;
+  }
+
+  .header-tagline {
+    display: none;
+  }
+
+  .logo-wordmark {
+    font-size: 1.3rem;
+  }
+
+  .footer-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+    padding: 0.75rem 1rem;
+  }
+
+  .site-footer {
+    height: auto;
+    padding: 0.5rem 0;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   11. Reduced-Motion Support (WCAG 2.1 §2.3.3)
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   12. Optional Light Mode Override
+   -------------------------------------------------------------------------- */
+@media (prefers-color-scheme: light) {
+  :root {
+    --color-bg:             #F5F0E8;
+    --color-surface:        #FFFFFF;
+    --color-surface-2:      #F0EBE1;
+    --color-text-primary:   #0D2B1F;
+    --color-text-secondary: #3A5248;
+  }
+
+  .site-header {
+    background: rgba(245, 240, 232, 0.92);
+    border-bottom-color: rgba(0, 0, 0, 0.08);
+  }
+
+  .site-footer {
+    background: rgba(245, 240, 232, 0.6);
+    border-top-color: rgba(0, 0, 0, 0.06);
+  }
+}
+
+/* ==========================================================================
+   Phase 3 — Chat Component Styles
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   13. Chat Panel Layout
+   -------------------------------------------------------------------------- */
+#chat-panel {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* --------------------------------------------------------------------------
+   14. Chat Header (title + progress)
+   -------------------------------------------------------------------------- */
+.chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  flex-shrink: 0;
+}
+
+.chat-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.chat-title {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.chat-progress {
+  font-size: 0.78rem;
+  color: var(--color-accent);
+  font-weight: 600;
+  background: rgba(232, 164, 39, 0.12);
+  border: 1px solid rgba(232, 164, 39, 0.25);
+  padding: 0.2rem 0.65rem;
+  border-radius: 20px;
+  letter-spacing: 0.02em;
+  flex-shrink: 0;
+}
+
+/* --------------------------------------------------------------------------
+   15. Messages Area
+   -------------------------------------------------------------------------- */
+.chat-messages {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  overflow-y: auto;
+  flex: 1;
+  padding: 1rem;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(232, 164, 39, 0.3) transparent;
+}
+
+.chat-messages::-webkit-scrollbar {
+  width: 4px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+  background: rgba(232, 164, 39, 0.3);
+  border-radius: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   16. Message Bubbles
+   -------------------------------------------------------------------------- */
+.chat-message {
+  max-width: 85%;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-md);
+  line-height: 1.6;
+  font-size: 0.925rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+  opacity: 0;
+  animation: fadeInUp 0.3s ease forwards;
+}
+
+.role-assistant {
+  background: var(--color-surface-2);
+  border-left: 3px solid var(--color-accent);
+  align-self: flex-start;
+  color: var(--color-text-primary);
+}
+
+.role-user {
+  background: var(--color-accent);
+  color: #0D2B1F;
+  align-self: flex-end;
+  font-weight: 500;
+  border-left: none;
+  border-right: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+/* --------------------------------------------------------------------------
+   17. Typing Indicator
+   -------------------------------------------------------------------------- */
+.typing-indicator {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0.6rem 1rem;
+  flex-shrink: 0;
+}
+
+.typing-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--color-text-secondary);
+  animation: typingBounce 1.1s infinite ease-in-out;
+}
+
+.typing-dot:nth-child(1) { animation-delay: 0s;    }
+.typing-dot:nth-child(2) { animation-delay: 0.18s; }
+.typing-dot:nth-child(3) { animation-delay: 0.36s; }
+
+/* --------------------------------------------------------------------------
+   18. Chat Input Row
+   -------------------------------------------------------------------------- */
+.chat-input-row {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.85rem 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+  align-items: flex-end;
+}
+
+textarea#chat-input {
+  flex: 1;
+  background: var(--color-surface-2);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-primary);
+  padding: 0.6rem 0.8rem;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  resize: none;
+  transition: border-color var(--transition), box-shadow var(--transition);
+  min-height: 42px;
+}
+
+textarea#chat-input::placeholder {
+  color: var(--color-text-secondary);
+  opacity: 0.6;
+}
+
+textarea#chat-input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px rgba(232, 164, 39, 0.2);
+}
+
+textarea#chat-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+button#chat-send {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-accent);
+  color: #0D2B1F;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: filter var(--transition), transform var(--transition);
+  flex-shrink: 0;
+  height: 42px;
+  min-width: 48px;
+}
+
+button#chat-send:hover {
+  filter: brightness(1.12);
+  transform: translateY(-1px);
+}
+
+button#chat-send:active {
+  transform: translateY(0);
+}
+
+button#chat-send:focus-visible {
+  outline: 2px solid #FFFFFF;
+  outline-offset: 2px;
+}
+
+button#chat-send:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+  filter: none;
+}
+
+/* --------------------------------------------------------------------------
+   19. Dashboard Placeholder (Phase 3 stub)
+   -------------------------------------------------------------------------- */
+.dashboard-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 1rem;
+  opacity: 0.45;
+  user-select: none;
+}
+
+.dashboard-placeholder-icon {
+  font-size: 3.5rem;
+  line-height: 1;
+}
+
+.dashboard-placeholder-text {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  text-align: center;
+  max-width: 200px;
+  line-height: 1.5;
+}
+
+/* --------------------------------------------------------------------------
+   20. Keyframe Animations
+   -------------------------------------------------------------------------- */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes typingBounce {
+  0%, 60%, 100% {
+    transform: translateY(0);
+    opacity: 0.6;
+  }
+  30% {
+    transform: translateY(-6px);
+    opacity: 1;
+  }
+}
+
+/* ==========================================================================
+   Phase 4 — Dashboard Component Styles
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   21. Dashboard Layout
+   -------------------------------------------------------------------------- */
+#dashboard-panel {
+  padding: var(--panel-padding);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  overflow-y: auto;
+}
+
+.dashboard-title {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.dashboard-empty-state {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  text-align: center;
+  padding: 3rem 1rem;
+  opacity: 0.65;
+}
+
+/* --------------------------------------------------------------------------
+   22. Stat Cards Grid
+   -------------------------------------------------------------------------- */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+
+.stat-card {
+  background: var(--color-surface-2);
+  border-radius: var(--radius-md);
+  padding: 0.9rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  transition: transform var(--transition), box-shadow var(--transition);
+  border-left: 3px solid rgba(255, 255, 255, 0.08);
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.stat-card--green { border-left-color: var(--color-success); }
+.stat-card--amber { border-left-color: var(--color-accent);  }
+.stat-card--red   { border-left-color: var(--color-danger);  }
+
+.stat-icon  { font-size: 1.25rem; line-height: 1; }
+.stat-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.stat-value {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  line-height: 1.1;
+}
+.stat-unit {
+  font-size: 0.7rem;
+  color: var(--color-text-secondary);
+}
+
+/* --------------------------------------------------------------------------
+   23. Chart Containers
+   -------------------------------------------------------------------------- */
+.chart-container,
+.comparison-container {
+  background: var(--color-surface-2);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* --------------------------------------------------------------------------
+   24. Report Download Button
+   -------------------------------------------------------------------------- */
+.report-actions {
+  display: flex;
+  justify-content: center;
+}
+
+.btn-download-report {
+  background: transparent;
+  border: 1px solid rgba(232, 164, 39, 0.45);
+  color: var(--color-accent);
+  border-radius: var(--radius-md);
+  padding: 0.65rem 1.5rem;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--transition), border-color var(--transition),
+              transform var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-download-report:hover {
+  background: rgba(232, 164, 39, 0.1);
+  border-color: var(--color-accent);
+  transform: translateY(-1px);
+}
+
+.btn-download-report:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+.btn-download-report:disabled {
+  opacity: 0.5;
+  cursor: wait;
+  transform: none;
+}
+
+/* --------------------------------------------------------------------------
+   25. Progress / Impact Section
+   -------------------------------------------------------------------------- */
+.progress-section {
+  background: var(--color-surface-2);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  border: 1px solid rgba(76, 175, 125, 0.15);
+}
+
+.progress-heading {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--color-text-primary);
+  margin: 0 0 0.75rem 0;
+}
+
+.progress-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.9rem;
+}
+
+.progress-badge {
+  background: rgba(76, 175, 125, 0.12);
+  border: 1px solid rgba(76, 175, 125, 0.3);
+  color: var(--color-success);
+  border-radius: 20px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.progress-stat {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+.progress-stat-num {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-accent-soft);
+  vertical-align: baseline;
+}
+
+.progress-stat-label {
+  color: var(--color-text-secondary);
+}
+
+.progress-no-badge {
+  font-size: 0.82rem;
+  color: var(--color-text-secondary);
+  opacity: 0.7;
+  margin-bottom: 0.75rem;
+}
+
+/* --------------------------------------------------------------------------
+   26. Dashboard Mobile Responsive
+   -------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}

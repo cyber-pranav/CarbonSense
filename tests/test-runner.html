@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CarbonSense — Test Suite Runner</title>
+  <style>
+    :root {
+      --color-bg: #0D2B1F;
+      --color-surface: #132E22;
+      --color-surface-2: #1C3D2E;
+      --color-accent: #E8A427;
+      --color-text-primary: #F0EBE1;
+      --color-text-secondary: #A8BFB0;
+      --color-success: #4CAF7D;
+      --color-danger: #E05C4B;
+      --font-body: 'DM Sans', system-ui, sans-serif;
+      --font-mono: 'Courier New', Courier, monospace;
+    }
+
+    body {
+      background-color: var(--color-bg);
+      color: var(--color-text-primary);
+      font-family: var(--font-body);
+      margin: 0;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 800px;
+      width: 100%;
+      background: var(--color-surface);
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.35);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    h1 {
+      font-family: Georgia, serif;
+      color: var(--color-accent);
+      margin-top: 0;
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      color: var(--color-text-secondary);
+      font-size: 0.95rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .summary-badge {
+      display: inline-block;
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      font-weight: 600;
+      margin-bottom: 0.6rem;
+      font-size: 0.9rem;
+    }
+
+    .summary-badge.all-pass {
+      background-color: rgba(76, 175, 125, 0.15);
+      color: var(--color-success);
+      border: 1px solid rgba(76, 175, 125, 0.3);
+    }
+
+    .summary-badge.has-fail {
+      background-color: rgba(224, 92, 75, 0.15);
+      color: var(--color-danger);
+      border: 1px solid rgba(224, 92, 75, 0.3);
+    }
+
+    .total-count {
+      font-size: 0.82rem;
+      color: var(--color-text-secondary);
+      margin-bottom: 1.5rem;
+      display: block;
+    }
+
+    pre.console-log {
+      background: var(--color-surface-2);
+      border-radius: 8px;
+      padding: 1.25rem;
+      overflow-x: auto;
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      line-height: 1.5;
+      color: var(--color-text-primary);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .test-line {
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    .test-line.pass  { color: var(--color-success); }
+    .test-line.fail  { color: var(--color-danger);  }
+    .test-line.suite { color: var(--color-accent); font-weight: 600; }
+
+    .footer {
+      margin-top: 2rem;
+      font-size: 0.8rem;
+      color: var(--color-text-secondary);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>CarbonSense Test Runner</h1>
+    <div class="subtitle">Running 8 unit + integration tests — all must show PASS</div>
+
+    <div id="status-badge" class="summary-badge">Running tests...</div>
+    <span id="total-count" class="total-count"></span>
+
+    <!-- Pre tag acting as an accessible log region -->
+    <pre id="log-output" class="console-log" role="log" aria-live="polite">Initialising test environment...</pre>
+  </div>
+
+  <div class="footer">
+    CarbonSense Platform Test Runner &bull; Client-Side Verification
+  </div>
+
+  <script type="module">
+    import { runTests as runCalcTests, results as calcResults }   from './calculator.test.js';
+    import { runTests as runAgentTests, results as agentResults } from './agents.test.js';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const logEl      = document.getElementById('log-output');
+      const badgeEl    = document.getElementById('status-badge');
+      const countEl    = document.getElementById('total-count');
+      logEl.textContent = '';
+
+      let totalTests  = 0;
+      let totalPassed = 0;
+
+      function appendLine(text, statusClass) {
+        const span = document.createElement('span');
+        span.className = 'test-line ' + (statusClass || '');
+        span.textContent = text;
+        logEl.appendChild(span);
+      }
+
+      appendLine('Executing CarbonSense Test Suites…\n');
+
+      // ── 1. Calculator unit tests (4 tests)
+      appendLine('=== UNIT TESTS: Calculator (4 tests) ===', 'suite');
+      runCalcTests();
+      calcResults.forEach(r => {
+        totalTests++;
+        if (r.passed) totalPassed++;
+        appendLine(`${r.passed ? '[PASS]' : '[FAIL]'} ${r.name}`, r.passed ? 'pass' : 'fail');
+        appendLine(`       Actual:   ${JSON.stringify(r.actual)}`);
+        appendLine(`       Expected: ${JSON.stringify(r.expected)}\n`);
+      });
+
+      // ── 2. Agent integration tests (4 tests)
+      appendLine('=== INTEGRATION TESTS: Agents (4 tests) ===', 'suite');
+      runAgentTests();
+      agentResults.forEach(r => {
+        totalTests++;
+        if (r.passed) totalPassed++;
+        appendLine(`${r.passed ? '[PASS]' : '[FAIL]'} ${r.name}`, r.passed ? 'pass' : 'fail');
+        appendLine(`       Actual:   ${JSON.stringify(r.actual)}`);
+        appendLine(`       Expected: ${JSON.stringify(r.expected)}\n`);
+      });
+
+      // ── 3. Final summary
+      appendLine('═'.repeat(44));
+      appendLine(`Total: ${totalPassed} / ${totalTests} tests passed.`);
+
+      countEl.textContent = `${totalPassed} passed · ${totalTests - totalPassed} failed · ${totalTests} total`;
+
+      if (totalPassed === totalTests) {
+        badgeEl.textContent  = '✅ ALL 8 TESTS PASSED';
+        badgeEl.className    = 'summary-badge all-pass';
+        appendLine('\nResult: SUCCESS ✅', 'pass');
+      } else {
+        badgeEl.textContent = `❌ ${totalTests - totalPassed} OF ${totalTests} TESTS FAILED`;
+        badgeEl.className   = 'summary-badge has-fail';
+        appendLine('\nResult: FAILURE ❌', 'fail');
+      }
+    });
+  </script>
+</body>
+</html>

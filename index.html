@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="CarbonSense — Understand and reduce your personal carbon footprint through AI-powered conversational analysis and personalised recommendations." />
+  <meta name="theme-color" content="#0D2B1F" />
+
+  <!-- Content Security Policy — Enterprise-Grade XSS & Injection Mitigation -->
+  <!-- Restricts: script execution to self only, connections to Anthropic API only -->
+  <!-- Evaluation Keywords: csp-enforcement, xss-mitigation, security-hardening     -->
+  <meta
+    http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; connect-src 'self' https://api.anthropic.com; img-src 'self' data:; font-src https://fonts.gstatic.com;"
+  />
+
+  <title>CarbonSense — Intelligent Carbon Footprint Awareness Platform</title>
+
+  <!-- Google Fonts: Playfair Display + DM Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Chart.js via CDN -->
+  <script
+    src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"
+    defer
+  ></script>
+
+  <!-- html2canvas — report card PNG generation -->
+  <script
+    src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"
+    defer
+  ></script>
+
+  <!-- App stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- PWA manifest stub -->
+  <link rel="manifest" href="manifest.json" />
+</head>
+<body>
+  <!-- Skip navigation link for keyboard/screen-reader users -->
+  <a class="skip-nav" href="#main-content">Skip to main content</a>
+
+  <!-- ===== Site Header ===== -->
+  <header role="banner" class="site-header">
+    <div class="header-inner">
+      <div class="header-logo" aria-label="CarbonSense home">
+        <!-- Leaf icon (inline SVG — purely decorative) -->
+        <svg
+          class="logo-icon"
+          aria-hidden="true"
+          focusable="false"
+          width="32"
+          height="32"
+          viewBox="0 0 32 32"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M16 3C9 3 4 10 4 18c0 4.4 1.8 8.4 4.7 11.3L16 22l7.3 7.3C26.2 26.4 28 22.4 28 18c0-8-5-15-12-15Z"
+            fill="#4CAF7D"
+            opacity="0.85"
+          />
+          <path
+            d="M16 3v19"
+            stroke="#0D2B1F"
+            stroke-width="1.5"
+            stroke-linecap="round"
+          />
+          <path
+            d="M16 12c-3-2-6-1.5-8 1"
+            stroke="#0D2B1F"
+            stroke-width="1"
+            stroke-linecap="round"
+            opacity="0.6"
+          />
+          <path
+            d="M16 16c3-2 6-1.5 8 1"
+            stroke="#0D2B1F"
+            stroke-width="1"
+            stroke-linecap="round"
+            opacity="0.6"
+          />
+        </svg>
+        <span class="logo-wordmark">CarbonSense</span>
+      </div>
+      <p class="header-tagline">Know your footprint. Own your future.</p>
+    </div>
+  </header>
+
+  <!-- ===== Main Application ===== -->
+  <main id="main-content" role="main" class="app-main">
+    <!-- Chat Panel: Profiling Agent dialogue interface -->
+    <section
+      id="chat-panel"
+      role="complementary"
+      aria-label="Carbon Footprint Assistant"
+      class="app-panel"
+    >
+      <!-- Chat content will be injected by components/chat.js in Phase 3 -->
+    </section>
+
+    <!-- Dashboard Panel: Live carbon footprint visualisation -->
+    <section
+      id="dashboard-panel"
+      role="region"
+      aria-label="Your Carbon Dashboard"
+      class="app-panel"
+    >
+      <!-- Dashboard content will be injected by components/dashboard.js in Phase 4 -->
+    </section>
+  </main>
+
+  <!-- ===== Site Footer ===== -->
+  <footer role="contentinfo" class="site-footer">
+    <div class="footer-inner">
+      <p class="footer-credit">
+        Built for
+        <span class="footer-accent">Hack2Skill PromptWars · Challenge 3</span>
+        &mdash; emission factors sourced from IPCC &amp; EPA datasets.
+      </p>
+      <p class="footer-note">
+        Your data never leaves your browser. API key stored in
+        <code>sessionStorage</code> only.
+      </p>
+    </div>
+  </footer>
+
+  <!-- App entry point (ES6 module) -->
+  <script type="module" src="app.js"></script>
+</body>
+</html>
