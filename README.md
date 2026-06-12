@@ -13,7 +13,7 @@ CarbonSense implements a rigorously audited enterprise-grade architecture across
 
 | Compliance Pillar | Implementation | Status |
 |---|---|---|
-| **Code Quality** | JSDoc on every function, `'use strict'` on all modules, camelCase naming, zero dead code, consistent brace formatting | ✅ |
+| **Code Quality** | JSDoc on every function, `'use strict'` on all modules, camelCase naming, zero dead code, consistent brace formatting — **Modular** component architecture (agents / components / utils) with strict separation of concerns | ✅ |
 | **Automated Testing** | 99-test suite (unit + integration), GitHub Actions CI/CD pipeline, 100% pass rate | ✅ |
 | **Security Hardening** | Enterprise CSP, XSS-zero textContent policy, sessionStorage-only API key, OWASP-compliant input sanitization | ✅ |
 | **Production Efficiency** | Zero-backend, pure CDN dependencies, Chart.js instance reuse, O(1) deterministic calculator, no npm/node_modules | ✅ |
